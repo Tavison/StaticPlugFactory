@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "../Factory/FooFactory.h"
+#include "FooFactory.h"
 #include "Foo.h"
 
 #include <memory>

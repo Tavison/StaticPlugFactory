@@ -33,16 +33,26 @@ SOFTWARE.
 
 #pragma once
 
+#include <concepts>
+#include <functional>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <utility>
 
+template<typename T>
+concept HashableKey =
+    requires(const T & a, const T & b)
+{
+    { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
+    { a == b } -> std::convertible_to<bool>;
+};
+
 //-------------------------------------------------------------------------------------------------
 // This provides the base for pluggable factories.
 // Derived product families provide the actual creation methods.
 //-------------------------------------------------------------------------------------------------
-template<typename Factory, typename Key = std::string>
+template<typename Factory, HashableKey Key = std::string>
 class PlugFactory
 {
 public:
@@ -53,10 +63,10 @@ public:
     using const_iterator = typename registry_type::const_iterator;
 
     // Return the factory desired.
-    [[nodiscard]] const factory_type* GetFactory(std::string_view className) const noexcept
+    [[nodiscard]] const factory_type* GetFactory(const key_type& className) const noexcept
     {
         const auto& registry = GetRegistry();
-        const auto  iter = registry.find(key_type{ className });
+        const auto iter = registry.find(className);
 
         if (iter == registry.end())
         {
@@ -71,9 +81,9 @@ public:
     // If the same name is registered more than once, the first registration
     // is preserved and later attempts are ignored. This matches the behavior
     // of the original insert-based implementation.
-    void RegisterClass(std::string_view factoryName, const factory_type* factory)
+    void RegisterClass(const key_type& factoryName, const factory_type* factory)
     {
-        GetRegistry().try_emplace(key_type{ factoryName }, factory);
+        GetRegistry().try_emplace(factoryName, factory);
     }
 
     PlugFactory() = default;

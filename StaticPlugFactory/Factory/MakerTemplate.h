@@ -27,6 +27,7 @@ SOFTWARE.
 #include <memory>
 #include <string>
 #include <string_view>
+#include <utility>
 
 #include "PlugFactoryTemplate.h"
 
@@ -34,47 +35,30 @@ SOFTWARE.
 //
 // BaseType         is the virtual base class for the family to be created.
 // BaseFactoryType  is the base class for the factory that makes the family.
-// ParamsType       is the object used in the BaseType's constructor.
+// Args...          are the arguments forwarded to product creation.
 // KeyType          is the lookup key for the system.
 template<
     class BaseType,
     class BaseFactoryType,
-    class ParamsType,
-    class KeyType = std::string>
+    class KeyType = std::string,
+    class... Args>
 class ProductFactory
 {
 public:
     using base_type = BaseType;
     using base_factory_type = BaseFactoryType;
-    using params_type = ParamsType;
     using key_type = KeyType;
     using pointer = std::shared_ptr<base_type>;
 
-    // Make a new object with no parameters.
-    [[nodiscard]] pointer NewObject(std::string_view name) const
+    // Make a new object and forward any construction arguments to the maker.
+    [[nodiscard]] pointer NewObject(key_type name, Args... args) const
     {
         // Get the factory.
         const base_factory_type* factory = m_Registry.GetFactory(name);
         if (factory)
         {
             // Return the product.
-            return factory->MakeProduct();
-        }
-
-        // nullptr indicates no product.
-        // This could very easily throw an exception instead, depending on policy.
-        return nullptr;
-    }
-
-    // Make a new object based on some parameter object.
-    [[nodiscard]] pointer NewObject(std::string_view name, params_type params) const
-    {
-        // Get the factory.
-        const base_factory_type* factory = m_Registry.GetFactory(name);
-        if (factory)
-        {
-            // Return the product.
-            return factory->MakeProduct(params);
+            return factory->MakeProduct(std::forward<Args>(args)...);
         }
 
         // nullptr indicates no product.
@@ -87,7 +71,7 @@ protected:
     ProductFactory() = default;
     ~ProductFactory() = default;
 
-    void RegisterClass(std::string_view className, const base_factory_type* factory)
+    void RegisterClass(key_type className, const base_factory_type* factory)
     {
         m_Registry.RegisterClass(className, factory);
     }
@@ -97,3 +81,4 @@ private:
     // The actual registry storage is private to PlugFactory.
     PlugFactory<base_factory_type, key_type> m_Registry;
 };
+

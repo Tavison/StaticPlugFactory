@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Factory\FooFactory.h">
-      <Filter>Header Files\Factory</Filter>
-    </ClInclude>
     <ClInclude Include="Factory\MakerTemplate.h">
       <Filter>Header Files\Factory</Filter>
     </ClInclude>
@@ -35,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="Test\Foo.h">
       <Filter>Header Files\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory\FooFactory.h">
+      <Filter>Source Files\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

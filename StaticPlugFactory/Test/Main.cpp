@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include "Foo.h"
-#include "../Factory/FooFactory.h"
+#include "FooFactory.h"
 
 #include <iostream>
 #include <memory>
