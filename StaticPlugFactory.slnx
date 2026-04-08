@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="StaticPlugFactory/StaticPlugFactory.vcxproj" Id="a0826c27-e20c-4099-903c-4488585f30ae" />
+</Solution>
