@@ -30,5 +30,6 @@ class Foo
 {
 public:
 	virtual std::string Test() = 0;
+	virtual ~Foo() = default;
 };
 
