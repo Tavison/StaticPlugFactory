@@ -21,20 +21,45 @@ This creates coupling between product types and the factory, and is easy to forg
 
 ## The Solution
 
-With StaticPlugFactory, each concrete type brings its own registration. Adding a new product is entirely self-contained in its own `.cpp` file — the factory doesn't need to change.
+With StaticPlugFactory, each concrete type brings its own registration. Adding a new product is entirely self-contained in its own `.cpp` file — no header required, and the factory doesn't need to change.
+
+Because the concrete class has no header file, callers can never `#include` it directly. The only way to interact with a product is through the abstract base interface, making downcasting impossible by construction.
 
 ```cpp
-// Foo_A.cpp — self-contained, no changes elsewhere needed
-class Foo_A_Maker : public FooFactory<Foo, const std::string&>
-{
-    Foo_A_Maker() : FooFactory("Foo_A") {}          // registers on construction
-    static const Foo_A_Maker registerThis;           // triggers registration at startup
+// Foo_A.cpp — the entire file, nothing else needed
 
+#include "FooFactory.h"
+#include "Foo.h"
+
+#include <memory>
+#include <string>
+
+// some example class
+class Foo_A : public Foo
+{
 public:
-    std::shared_ptr<Foo> MakeProduct(const std::string& params) const override;
+    explicit Foo_A(const std::string& params) { /* ... */ }
+
+    // some method overrides
+    std::string Test() override { return "This is Foo_A!"; }
 };
 
-const Foo_A_Maker Foo_A_Maker::registerThis;        // the one static instance
+//-----------------------------------------------------------------------------
+// Factory registration — this is all it takes to plug Foo_A into the system.
+//-----------------------------------------------------------------------------
+class Foo_A_Maker : public FooFactory<Foo, const std::string&>
+{
+    Foo_A_Maker() : FooFactory("Foo_A") {}      // registers on construction
+    static const Foo_A_Maker registerThis;      // triggers registration at startup
+
+public:
+    [[nodiscard]] std::shared_ptr<Foo> MakeProduct(const std::string& params) const override
+    {
+        return std::make_shared<Foo_A>(params);
+    }
+};
+
+const Foo_A_Maker Foo_A_Maker::registerThis;   // the one static instance
 ```
 
 ## How It Works
