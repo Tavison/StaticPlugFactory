@@ -41,6 +41,15 @@
     <ClCompile Include="Test\Foo_A.cpp">
       <Filter>Source Files\Test</Filter>
     </ClCompile>
+    <ClCompile Include="Test\Foo_B.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\Foo_C.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\Foo_D.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
     <ClCompile Include="Test\Main.cpp">
       <Filter>Source Files\Test</Filter>
     </ClCompile>

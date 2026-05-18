@@ -19,13 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Factory\FooFactory.h" />
     <ClInclude Include="Factory\MakerTemplate.h" />
     <ClInclude Include="Factory\PlugFactoryTemplate.h" />
     <ClInclude Include="Test\Foo.h" />
+    <ClInclude Include="Test\FooFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test\Foo_A.cpp" />
+    <ClCompile Include="Test\Foo_B.cpp" />
+    <ClCompile Include="Test\Foo_C.cpp" />
+    <ClCompile Include="Test\Foo_D.cpp" />
     <ClCompile Include="Test\Main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
