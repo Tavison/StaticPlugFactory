@@ -41,6 +41,8 @@ protected:
     using base_type = ProductFactory<Foo, FooFactory<Foo, Args...>, std::string, Args...>;
     using pointer   = std::shared_ptr<Foo>;
 
+    friend base_type;
+
     explicit FooFactory(const std::string& className)
     {
         this->RegisterClass(className, this);
