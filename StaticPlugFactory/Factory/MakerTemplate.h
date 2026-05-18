@@ -51,7 +51,7 @@ public:
     using pointer = std::shared_ptr<base_type>;
 
     // Make a new object and forward any construction arguments to the maker.
-    [[nodiscard]] pointer NewObject(key_type name, Args... args) const
+    [[nodiscard]] pointer NewObject(const key_type& name, Args... args) const
     {
         // Get the factory.
         const base_factory_type* factory = m_Registry.GetFactory(name);
@@ -71,7 +71,7 @@ protected:
     ProductFactory() = default;
     ~ProductFactory() = default;
 
-    void RegisterClass(key_type className, const base_factory_type* factory)
+    void RegisterClass(const key_type& className, const base_factory_type* factory)
     {
         m_Registry.RegisterClass(className, factory);
     }

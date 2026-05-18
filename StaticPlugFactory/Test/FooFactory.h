@@ -25,6 +25,7 @@ SOFTWARE.
 #pragma once
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -40,8 +41,6 @@ protected:
     using base_type = ProductFactory<Foo, FooFactory<Foo, Args...>, std::string, Args...>;
     using pointer   = std::shared_ptr<Foo>;
 
-    friend base_type;
-
     explicit FooFactory(const std::string& className)
     {
         this->RegisterClass(className, this);
@@ -54,7 +53,7 @@ protected:
     // but that would be an intentional design change.
     [[nodiscard]] virtual pointer MakeProduct(Args... args) const
     {
-        return nullptr;
+        throw std::logic_error("MakeProduct not overridden in derived factory");
     }
 
 public:
