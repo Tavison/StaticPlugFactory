@@ -122,7 +122,7 @@ static void test_unoverridden_make_product_throws()
     bool threw = false;
     try
     {
-        ff.NewObject("FooUnoverridden", std::string{ "param" });
+        [[maybe_unused]] auto result = ff.NewObject("FooUnoverridden", std::string{ "param" });
     }
     catch (const std::logic_error&)
     {
