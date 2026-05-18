@@ -140,16 +140,33 @@ const Foo_A_Maker Foo_A_Maker::registerThis;
 
 ### 4. Create products by name
 
+The caller only needs the abstract interface and the factory — there is no `Foo_A.h` to include because `Foo_A` has no header. The concrete type is completely hidden; the caller cannot name it, hold a typed pointer to it, or downcast to it.
+
 ```cpp
-FooFactory<Foo, const std::string&> ff;
-std::shared_ptr<Foo> foo = ff.NewObject("Foo_A", std::string{"Blah"});
+// Main.cpp — note: no #include "Foo_A.h" — it doesn't exist
 
-if (!foo) {
-    std::cerr << "Unknown product type.\n";
-    return 1;
+#include "FooFactory.h"
+#include "Foo.h"
+
+#include <iostream>
+#include <memory>
+#include <string>
+
+int main()
+{
+    FooFactory<Foo, const std::string&> ff;
+
+    // Request a product by name — no knowledge of Foo_A required
+    std::shared_ptr<Foo> foo = ff.NewObject("Foo_A", std::string{"Blah"});
+
+    if (!foo) {
+        std::cerr << "Unknown product type.\n";
+        return 1;
+    }
+
+    std::cout << foo->Test();   // "This is Foo_A!"
+    return 0;
 }
-
-std::cout << foo->Test();   // "This is Foo_A!"
 ```
 
 ## API Reference
