@@ -62,6 +62,35 @@ public:
 const Foo_A_Maker Foo_A_Maker::registerThis;   // the one static instance
 ```
 
+The caller needs only the abstract interface — there is no `Foo_A.h` because `Foo_A` has no header. The concrete type is completely hidden from the rest of the codebase.
+
+```cpp
+// Usage example — note: no #include "Foo_A.h" — it doesn't exist
+
+#include "FooFactory.h"
+#include "Foo.h"
+
+#include <iostream>
+#include <memory>
+#include <string>
+
+int main()
+{
+    FooFactory<Foo, const std::string&> ff;
+
+    // Request a product by name — no knowledge of Foo_A required
+    std::shared_ptr<Foo> foo = ff.NewObject("Foo_A", std::string{"Blah"});
+
+    if (!foo) {
+        std::cerr << "Unknown product type.\n";
+        return 1;
+    }
+
+    std::cout << foo->Test();   // "This is Foo_A!"
+    return 0;
+}
+```
+
 ## How It Works
 
 Three templates compose the system:
